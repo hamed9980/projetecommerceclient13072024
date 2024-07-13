@@ -1,0 +1,18 @@
+.multistep{
+    background-color:#5A6872;
+     
+    padding: 0 15px;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    
+    align-items: center;
+}
+ 
+.multistep Link:hover {
+    background-color: #5A6872; /* Slightly lighter blue */
+}
+
+.multistep Link:visited {
+    color: #A0A0A0; /* Light Gray */
+}

@@ -1,0 +1,26 @@
+.navigation-header {
+    background-color: rgb(73, 51, 153);
+    padding: 0 15px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Add styles for nav, logo, navigation items, and links as described in the texts */
+<header class="navigation-header">
+    <nav>
+        <div class="logo-container">
+            <a href="./index.html">Logo</a>
+        </div>
+        <div class="navigation-items" id="navigation-items">
+            <a href="">About</a>
+            <a href="">Projects</a>
+            <a href="">Contact Me</a>
+        </div>
+        <div class="hamburger">
+            <span id="openHam">&#9776;</span>
+            <span id="closeHam">&#x2716;</span>
+        </div>
+    </nav>
+</header>

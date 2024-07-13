@@ -1,0 +1,23 @@
+.navigation-header {
+    background-color:#5A6872;
+    color:beige;
+    padding: 0 15px;
+    height: 90px;
+    
+}
+
+ .navigation-items{
+    display: flex;
+    justify-content: space-around;
+    
+    align-items: center;
+
+ }
+
+.navigation-items Link:hover {
+    background-color: #5A6872; /* Slightly lighter blue */
+}
+
+.navigation-items Link:visited {
+    color: #A0A0A0; /* Light Gray */
+}

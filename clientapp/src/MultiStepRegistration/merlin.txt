@@ -1,0 +1,29 @@
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+
+const CountdownRedirect = () => {
+  const history = useHistory();
+  const [countdown, setCountdown] = useState(10);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountdown(prevCountdown => prevCountdown - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (countdown === 0) {
+      history.push('/auth');
+    }
+  }, [countdown, history]);
+
+  return (
+    <div>
+      <h1>Redirecting to auth page in {countdown} seconds</h1>
+    </div>
+  );
+};
+
+export default CountdownRedirect;
