@@ -1,0 +1,15 @@
+{...register("user_password", {
+  required: "Password is required.",
+  minLength: {
+    value: 6,
+    message: "Password should have at least 6 characters."
+  },
+  validate: {
+    matchPattern: value =>
+      /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#*$])/.test(value) ||
+      "Password must contain lowercase and uppercase letters, digits, and special symbols"
+  }
+})}
+The error "validate[key] is not a function" typically occurs when you try to call a function on an object, but the key you are using to access the function does not exist or is not a function itself.
+
+In the code you provided, it seems the issue might be related to the way you are accessing the validation function matchPattern inside the register method. The correct way to access the matchPattern function inside register would be:

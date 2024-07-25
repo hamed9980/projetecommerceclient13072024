@@ -1,0 +1,16 @@
+import React, { useRef, useEffect } from 'react';
+
+function MyComponent() {
+  const myElementRef = useRef(null);
+
+  useEffect(() => {
+    // Use the ref to access and update the DOM element
+    if (myElementRef.current) {
+      myElementRef.current.innerHTML = 'New content'; // Example update
+    }
+  }, []);
+
+  return <div ref={myElementRef}>Original content</div>;
+}
+
+export default MyComponent;

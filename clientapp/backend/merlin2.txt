@@ -1,0 +1,53 @@
+const bcrypt = require('bcrypt');
+
+// Example function to hash a password
+const hashPassword = async (password) => {
+    try {
+        if (!password) {
+            throw new Error('Password is required for hashing.');
+        }
+
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        return hashedPassword;
+    } catch (error) {
+        console.error('Error while hashing the password:', error);
+        throw error; // Propagate the error up
+    }
+};
+
+// Example function to compare a password with its hash
+const comparePassword = async (password, hashedPassword) => {
+    try {
+        if (!password || !hashedPassword) {
+            throw new Error('Both password and hash are required for comparison.');
+        }
+
+        const isMatch = await bcrypt.compare(password, hashedPassword);
+        return isMatch;
+    } catch (error) {
+        console.error('Error while comparing the password hash:', error);
+        throw error; // Propagate the error up
+    }
+};
+
+// Example usage
+const runExample = async () => {
+    const userPassword = 'user-input-password';
+    // Hash the password
+    try {
+        const hashedPassword = await hashPassword(userPassword);
+        // In a real application, you would typically store the hashedPassword in a database
+        console.log('Hashed Password:', hashedPassword);
+
+        // Compare the hashed password with the user input
+        const isPasswordMatch = await comparePassword(userPassword, hashedPassword);
+        console.log('Password Match:', isPasswordMatch);
+    } catch (error) {
+        // Handle any errors here
+        console.error('Error in runExample:', error);
+    }
+};
+
+// Execute the example
+runExample();

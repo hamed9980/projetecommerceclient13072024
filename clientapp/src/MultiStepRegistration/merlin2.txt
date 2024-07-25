@@ -1,0 +1,55 @@
+// ... (other imports and code)
+
+const SecondStep = (props) => {
+  // ... (other code)
+
+  const onSubmit = async (data) => {
+    try {
+      props.updateUser(data);
+
+      // ... (other code)
+
+      const response = await axios.post(
+        'http://localhost:5001/users/signup',
+        body,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      console.log(response.data);
+      console.log(body);
+      reset();
+
+      // ... (other code)
+
+    } catch (error) {
+      console.error('An error occurred:', error);
+      if (error.response) {
+        // Request was made and server responded with a status code that falls out of the range of 2xx
+        console.error('Response error data:', error.response.data);
+        console.error('Response error status:', error.response.status);
+        console.error('Response error headers:', error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('Request error:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Other error:', error.message);
+      }
+
+      // Handle the error and display an appropriate message to the user
+      document.getElementById('result').innerText = "An error occurred. Redirecting to auth page in " + countdown + " seconds";
+      
+      const interval = setInterval(() => {
+        setCountdown(prevCountdown => prevCountdown - 1);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  };
+
+  // ... (other code)
+};

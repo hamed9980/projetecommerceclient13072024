@@ -1,0 +1,17 @@
+// Updated function to compare a password with its hash
+const comparePassword = async (password, hashedPassword) => {
+    try {
+        if (!password) {
+            throw new Error('Password is required for comparison.');
+        }
+        if (!hashedPassword) {
+            throw new Error('Hashed password is required for comparison.');
+        }
+
+        const isMatch = await bcrypt.compare(password, hashedPassword);
+        return isMatch;
+    } catch (error) {
+        console.error('Error while comparing the password hash:', error);
+        throw error; // Propagate the error up
+    }
+};

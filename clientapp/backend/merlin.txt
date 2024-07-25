@@ -1,0 +1,35 @@
+var jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const User = require('path-to-user-model'); // Replace 'path-to-user-model' with the actual path to your user model
+const JWT_SECRET = "z~AAB6693*Jf";
+
+const verifyUserLogin = async (email, password) => {
+   try {
+       const user = await User.findOne({ email }).lean();
+       if (!user) {
+           return { status: 'error', error: 'user not found' };
+       } else if (await bcrypt.compare(password, user.user_password)) {
+           // creating a JWT token
+           const token = jwt.sign({ id: user._id, username: user.email, type: 'user' }, JWT_SECRET, { expiresIn: '2h' });
+           return { status: 'ok', data: token };
+       }
+       return { status: 'error', error: 'invalid password' };
+   } catch (error) {
+       console.log(error);
+       return { status: 'error', error: 'timed out' };
+   }
+};
+
+const loginuser = async (req, res) => {
+   console.log(req.body);
+   const { user_email, user_password } = req.body;
+   // we made a function to verify our user login
+   const response = await verifyUserLogin(user_email, user_password);
+   if (response.status === 'ok') {
+       // storing our JWT web token as a cookie in our browser
+       res.cookie('token', response.data, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });  // maxAge: 2 hours
+       res.send({ token: response.data });
+   } else {
+       res.json(response);
+   }
+};

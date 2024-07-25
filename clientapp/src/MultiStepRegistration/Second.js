@@ -10,10 +10,11 @@ import sortBy from "sort-by";
 import axios, {isCancel, AxiosError} from 'axios';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
+import   { useRef  } from 'react';
 const SecondStep = (props) => {
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(10);
-
+  const myElementRef = useRef(null);
   
 
   useEffect(() => {
@@ -34,27 +35,29 @@ const SecondStep = (props) => {
   });
 
   const onSubmit = async (data) => {
+    try{
     props.updateUser(data);
     
 
     var dataf=props.user;
     
-    if(dataf.user_email==undefined){
+    if(dataf.user_email==undefined || dataf.user_email==''){
       console.log('added data')
       dataf.user_email=data.user_email;
       dataf.user_password=data.user_password
     }
     const body=dataf
  
-    const data1= await axios.post(
-      'http://localhost:5001/users/signup', {
-          method: "post",
-          body: body,
-          headers: {
-              'Content-Type': 'application/json'
-          }
-      });
-       console.log(data1.data)
+    const response = await axios.post(
+      'http://localhost:5001/users/signup',
+      body,
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+       console.log(response.data)
        console.log(body)
        reset()
        props.updateUser({first_name:"",
@@ -65,9 +68,9 @@ const SecondStep = (props) => {
        })
         
        console.log('reset form')
-       if(data1.data==="Something Went Wrong"){
+       if(response.data==="Something Went Wrong"){
        
-        document.getElementById('result').innerText="You are already registered "+".Redirecting to auth page in "+countdown+" seconds"
+        myElementRef.current.innerText="You are already registered "+".Redirecting to auth page in "+countdown+" seconds"
 
 
         const interval = setInterval(() => {
@@ -80,7 +83,7 @@ const SecondStep = (props) => {
        }
        else{
         
-        document.getElementById('result').innerText="Registration success"+".Redirecting to auth page in "+countdown+" seconds"
+        myElementRef.current.innerText="Registration success"+".Redirecting to auth page in "+countdown+" seconds"
         const interval = setInterval(() => {
           setCountdown(prevCountdown => prevCountdown - 1);
           
@@ -88,6 +91,10 @@ const SecondStep = (props) => {
     
         return () => clearInterval(interval);
        }
+      }catch(ex){
+
+        console.log(ex)
+      }
   };
 
   return (
@@ -132,14 +139,30 @@ const SecondStep = (props) => {
               required: "Password is required.",
               minLength: {
                 value: 6,
-                message: "Password should have at-least 6 characters."
+                message: "Password should have at least 6 characters."
+              },
+              validate: {
+                matchPattern: value =>
+                  /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#*$])/.test(value) ||
+                  "Password must contain lowercase and uppercase letters, digits, and special symbols"
               }
             })}
+            
             className={`${errors.user_password ? "input-error" : ""}`}
           />
-          {errors.user_password && (
-            <p className="errorMsg">{errors.user_password.message}</p>
-          )}
+            {errors.user_password?.type === "required" && (
+    <p className="errorMsg">Password is required.</p>
+)}
+{errors.user_password?.type === "minLength" && (
+    <p className="errorMsg">
+    	Password should be at-least 6 characters.
+    </p>
+)}
+{errors.user_password?.type === "matchPattern" && (
+    <p className="errorMsg">
+    	Password should contain at least one uppercase letter, lowercase
+letter, digit, and special symbol.
+    </p>)}
         </Form.Group>
 
         <Button variant="primary" type="submit">
@@ -147,7 +170,7 @@ const SecondStep = (props) => {
         </Button>
       </motion.div>
     </Form>
-    <div id="result"></div>
+    <div ref={myElementRef}></div>
     </>
   );
 };
